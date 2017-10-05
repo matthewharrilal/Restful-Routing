@@ -27,8 +27,42 @@ class User(Resource):
         inserted_document = post_collection.insert_one(requested_dictionary)
 
         # Now that we have inserted the document we now have to retrieve to see if it even exists without checking mongodb
+        '''The way we can go about this is by actually finding the documents by their object id and
+        retrieve them that way therefore we can then have a safe way of finding what documents
+        populate our database'''
 
-        return (inserted_document)
+
+        #  We iterate through these documents by locating their post id
+        locating_by_object_id = post_collection.find_one({"_id": ObjectId(inserted_document.inserted_id)})
+
+        if locating_by_object_id:
+            return (locating_by_object_id, 200, None)
+        else:
+            return(None,400,None)
+
+
+    def get(self, document_id):
+        # Since this is a get request essentially we have to be get the resources and we are fetching by id
+        '''Therefore we can go about this by accessing the same collection so essentially we have to be able to
+        access the same collection by using the same naming coneventions if we did not access the same collection
+        our results will turn out nil because we are checking a none existent collection'''
+
+        # Therefore let us access the same collection
+        post_collection = app.db.posts
+
+        # Now that we are in the collection we have to iterate through the documents
+        location_of_documents = post_collection.find_one({"_id": ObjectId(document_id)})
+
+        if location_of_documents is None:
+            response = jsonify(data=[])
+            response.status_code = 404
+            return (response)
+            '''So essentially what jsonify does is that it allows  us
+            to query an api and get json back not to be confused with what json.dumps does and that allows us
+            to format something of its native schema and format it into a json object'''
+        else:
+            pdb.set_trace()
+            return location_of_documents
 
 
 
