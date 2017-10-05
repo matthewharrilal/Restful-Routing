@@ -61,9 +61,16 @@ class User(Resource):
             to query an api and get json back not to be confused with what json.dumps does and that allows us
             to format something of its native schema and format it into a json object'''
         else:
-            pdb.set_trace()
             return location_of_documents
 
+    '''So essentially what this line of code does is that it takes the place of the routes and what that essentially
+    does is that it allows us to say that since we are inheriting from the Resource class we have these key words
+    such as post and get and that automatically knows that depending on the keyword it will be a get or post request'''
+
+    api.add_resource(location_of_documents, '/route')
+    '''Essentially what this line of code does is that it allows us to send almost dummy data between our testing file
+    and this server file that is why we do not need to encode the data becuase it is not server to client it is essentially
+    file to file'''
 
 
 if __name__ == '__main__':
