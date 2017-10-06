@@ -1,16 +1,17 @@
-import server
+# import server
 import unittest
 import json
 import bcrypt
 import base64
 from pymongo import MongoClient
+import Restful-Routing-Exercises
 
 class TriplPlannerTestCase(unittest.TestCase):
     def setUp(self):
         #  From my assumption this is another keyword that we inherit from the test case
-        self.app  = server.app.test_client()
+        self.app = server.app.test_client()
 
-        server.app.config['Testing'] = True
+        server.app.config['TESTING'] = True
 
         '''So essentially what we are doing here is that we are setting up our client and we are
         making our database global'''
@@ -26,11 +27,28 @@ class TriplPlannerTestCase(unittest.TestCase):
         #  Creation of our server
         server.app.db = db
 
+        # We do this to clear our database before each test runs
+        db.drop_collection('posts')
+
         # Here we create the tests for the users as well as fill this function with methods
-        def testCreateUser(self):
-            '''So essentially let us explain what is going on here we are going to basically send dummy data to our server and see if
-            it can send that data to the database this is almost acting as our paw'''
-            
+
+        def test_getting_a_user(self):
+            self.app.post('/route',
+                            headers=None,
+                            data=json.dumps({"name":"Matthew",
+                                            "student_id": "Personality",
+                                            "fun_facts": "Care Free and Determined"}),
+                                            content_type='application/json')
+            # Make a get request to fetch the users to check if the user is actually getting created
+
+            response = self.app.get('/route',
+                                    query_string=dict(student_id="Personality"))
+
+            # When we get the repsonse we then want to decode it so it becomes a native object
+            repsonse_json = json.loads(response.data.decode())
+
+            # Here we actually test if the get request was successfull
+            self.assertEqual(response.status_code,200)
 
 if __name__ == '__main__':
     unittest.main()

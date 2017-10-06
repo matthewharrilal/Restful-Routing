@@ -52,6 +52,7 @@ class User(Resource):
 
         # Now that we are in the collection we have to iterate through the documents
         location_of_documents = post_collection.find_one({"_id": ObjectId(document_id)})
+        api.add_resource(location_of_documents, '/route')
 
         if location_of_documents is None:
             response = jsonify(data=[])
@@ -67,7 +68,7 @@ class User(Resource):
     does is that it allows us to say that since we are inheriting from the Resource class we have these key words
     such as post and get and that automatically knows that depending on the keyword it will be a get or post request'''
 
-    api.add_resource(location_of_documents, '/route')
+    # api.add_resource(location_of_documents, '/route')
     '''Essentially what this line of code does is that it allows us to send almost dummy data between our testing file
     and this server file that is why we do not need to encode the data becuase it is not server to client it is essentially
     file to file'''
